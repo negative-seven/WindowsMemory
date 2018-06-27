@@ -52,6 +52,30 @@ namespace WindowsMemory
 		throw std::runtime_error("Module not found.");
 	}
 
+	void MemoryHandler::setProtection(memloc address, size_t memSize, bool read, bool write, bool execute)
+	{
+		// See https://docs.microsoft.com/en-us/windows/desktop/Memory/memory-protection-constants for explanation
+		int protBitShift = 0;
+		if (execute)
+		{
+			protBitShift = 4;
+		}
+		if (read)
+		{
+			protBitShift += 1;
+			
+			if (write)
+			{
+				protBitShift += 1;
+			}
+		}
+		DWORD protection = 1 << protBitShift;
+
+		PDWORD _ = new DWORD();
+		int x = VirtualProtectEx(pHandle, (LPVOID)address, memSize, protection, _);
+		delete _;
+	}
+
 	uint32_t MemoryHandler::readUint32(memloc address)
 	{
 		uint32_t *dataPtr = read<uint32_t>(address, sizeof(uint32_t));

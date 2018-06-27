@@ -19,6 +19,7 @@ namespace WindowsMemory
 		void close();
 
 		memloc getBaseAddress(const char *moduleName);
+		void setProtection(memloc address, size_t memSize, bool read, bool write, bool execute);
 		
 		uint32_t readUint32(memloc address);
 		float readFloat(memloc address);
