@@ -6,6 +6,8 @@
 
 namespace WindowsMemory
 {
+	typedef uint32_t memloc;
+
 	class MemoryHandler
 	{
 	private:
@@ -16,19 +18,19 @@ namespace WindowsMemory
 		MemoryHandler(HWND hWindow);
 		void close();
 
-		uint32_t getBaseAddress(const char *moduleName);
+		memloc getBaseAddress(const char *moduleName);
 		
-		uint32_t readUint32(uint32_t address);
-		float readFloat(uint32_t address);
-		uint8_t *readBytes(uint32_t address, unsigned int dataSize);
+		uint32_t readUint32(memloc address);
+		float readFloat(memloc address);
+		uint8_t *readBytes(memloc address, size_t dataSize);
 		
-		void writeUint32(uint32_t address, uint32_t data);
-		void writeFloat(uint32_t address, float data);
-		void writeBytes(uint32_t address, uint8_t data[], unsigned int dataSize);
+		void writeUint32(memloc address, uint32_t data);
+		void writeFloat(memloc address, float data);
+		void writeBytes(memloc address, uint8_t data[], size_t dataSize);
 
 	private:
 		void openProcessHandle(HWND hWindow);
-		template <typename T> T *read(uint32_t address, uint32_t dataSize);
-		void write(uint32_t address, void *data, uint32_t dataSize);
+		template <typename T> T *read(memloc address, size_t dataSize);
+		void write(memloc address, void *data, size_t dataSize);
 	};
 }

@@ -29,7 +29,7 @@ namespace WindowsMemory
 		CloseHandle(pHandle);
 	}
 
-	uint32_t MemoryHandler::getBaseAddress(const char *moduleName)
+	memloc MemoryHandler::getBaseAddress(const char *moduleName)
 	{
 		HMODULE hModules[1024];
 		DWORD cbNeeded;
@@ -52,7 +52,7 @@ namespace WindowsMemory
 		throw std::runtime_error("Module not found.");
 	}
 
-	uint32_t MemoryHandler::readUint32(uint32_t address)
+	uint32_t MemoryHandler::readUint32(memloc address)
 	{
 		uint32_t *dataPtr = read<uint32_t>(address, sizeof(uint32_t));
 		uint32_t data = *dataPtr;
@@ -60,7 +60,7 @@ namespace WindowsMemory
 		return data;
 	}
 
-	float MemoryHandler::readFloat(uint32_t address)
+	float MemoryHandler::readFloat(memloc address)
 	{
 		float *dataPtr = read<float>(address, sizeof(float));
 		float data = *dataPtr;
@@ -68,23 +68,23 @@ namespace WindowsMemory
 		return data;
 	}
 
-	uint8_t *MemoryHandler::readBytes(uint32_t address, unsigned int dataSize)
+	uint8_t *MemoryHandler::readBytes(memloc address, size_t dataSize)
 	{
 		uint8_t *value = read<uint8_t>(address, dataSize);
 		return value;
 	}
 
-	void MemoryHandler::writeUint32(uint32_t address, uint32_t data)
+	void MemoryHandler::writeUint32(memloc address, uint32_t data)
 	{
 		write(address, &data, sizeof(uint32_t));
 	}
 
-	void MemoryHandler::writeFloat(uint32_t address, float data)
+	void MemoryHandler::writeFloat(memloc address, float data)
 	{
 		write(address, &data, sizeof(float));
 	}
 
-	void MemoryHandler::writeBytes(uint32_t address, uint8_t data[], unsigned int dataSize)
+	void MemoryHandler::writeBytes(memloc address, uint8_t data[], size_t dataSize)
 	{
 		write(address, data, dataSize);
 	}
@@ -102,7 +102,7 @@ namespace WindowsMemory
 	}
 
 	template <typename T>
-	T *MemoryHandler::read(uint32_t address, uint32_t dataSize)
+	T *MemoryHandler::read(memloc address, size_t dataSize)
 	{
 		T *value = new T[dataSize / sizeof(T)];
 
@@ -114,7 +114,7 @@ namespace WindowsMemory
 		return value;
 	}
 	
-	void MemoryHandler::write(uint32_t address, void *data, uint32_t dataSize)
+	void MemoryHandler::write(memloc address, void *data, size_t dataSize)
 	{
 		if (!WriteProcessMemory(pHandle, (LPVOID)address, data, dataSize, NULL))
 		{
